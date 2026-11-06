@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  color: #202938;
+}
+
+.topbar {
+  padding: 24px;
+  background: #173b67;
+  color: #ffffff;
+}
+
+.topbar h1 {
+  margin: 0 0 8px;
+}
+
+.topbar p {
+  margin: 0;
+  color: #dce8f5;
+}
+
+.container {
+  width: min(1100px, 92%);
+  margin: 32px auto;
+}
+
+.welcome,
+.card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e1e6ed;
+  border-radius: 10px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+#api-status {
+  font-weight: bold;
+}
