@@ -34,6 +34,10 @@ export async function createSale(req: Request, res: Response) {
     !Number.isInteger(item.quantity) || item.quantity < 1)) {
     return res.status(400).json({ message: "Each sale item needs a valid product and quantity." });
   }
+  const mergedItems = [...normalized.reduce((quantities, item) => {
+    quantities.set(item.product_id, (quantities.get(item.product_id) ?? 0) + item.quantity);
+    return quantities;
+  }, new Map<number, number>())].map(([product_id, quantity]) => ({ product_id, quantity }));
 
   const connection = await pool.getConnection();
   try {
@@ -41,7 +45,7 @@ export async function createSale(req: Request, res: Response) {
     let total = 0;
     const saleLines: { product_id: number; quantity: number; unit_price: number; subtotal: number }[] = [];
 
-    for (const item of normalized) {
+    for (const item of mergedItems) {
       const [rows] = await connection.execute<RowDataPacket[]>(
         "SELECT product_id, unit_price, stock_quantity FROM products WHERE product_id = ? FOR UPDATE",
         [item.product_id]
