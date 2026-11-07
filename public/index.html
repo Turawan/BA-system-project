@@ -3,28 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retail Sales & Inventory BA System</title>
+  <meta name="description" content="Retail sales, inventory and business analytics dashboard">
+  <title>RetailIQ | Sales & Inventory Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="/js/app.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <h1>Retail Sales & Inventory BA System</h1>
-    <p>Business Analytics Dashboard</p>
-  </header>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">R</span><span>Retail<span class="brand-light">IQ</span><small>BUSINESS ANALYTICS</small></span></a>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-menu" aria-label="Main navigation">
+        <button class="nav-link active" data-view="dashboard"><span>▦</span> Overview</button>
+        <button class="nav-link" data-view="products"><span>▤</span> Products</button>
+        <button class="nav-link" data-view="sales"><span>↗</span> Sales</button>
+        <button class="nav-link" data-view="inventory"><span>▣</span> Inventory</button>
+        <button class="nav-link" data-view="analytics"><span>⌁</span> Analytics</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note"><span class="status-dot"></span><div><strong>Local workspace</strong><small>Retail management system</small></div></div>
+        <small class="version">BA SYSTEM · STUDENT PROJECT</small>
+      </div>
+    </aside>
 
-  <main class="container">
-    <section class="welcome">
-      <h2>Project dashboard</h2>
-      <p>This is the starting page for the group's Business Analytics system.</p>
-      <p id="api-status">Checking API connection...</p>
-    </section>
+    <main class="main-content">
+      <header class="topbar">
+        <div><p class="eyebrow">RETAIL MANAGEMENT</p><h1 id="page-title">Overview</h1></div>
+        <div class="top-actions"><span class="today-label" id="today-label"></span><span class="avatar">BA</span></div>
+      </header>
 
-    <section class="cards" aria-label="Analytics overview">
-      <article class="card"><h3>Total Sales</h3><p>To be connected</p></article>
-      <article class="card"><h3>Products</h3><p>To be connected</p></article>
-      <article class="card"><h3>Transactions</h3><p>To be connected</p></article>
-    </section>
-  </main>
+      <section class="view active" id="view-dashboard">
+        <div class="welcome-banner">
+          <div><p class="eyebrow light">BUSINESS AT A GLANCE</p><h2>Make smarter retail decisions.</h2><p>Track sales, keep products moving, and turn store data into action.</p></div>
+          <div class="banner-decoration">↗</div>
+        </div>
+        <div class="section-heading"><div><h2>Store performance</h2><p>A live summary from your sales and product records.</p></div><button class="button button-primary" data-action="go-sales">＋ Record a sale</button></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total revenue</span><span class="stat-icon purple">₱</span></div><strong id="stat-revenue">₱0.00</strong><small>All recorded transactions</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Transactions</span><span class="stat-icon blue">↗</span></div><strong id="stat-transactions">0</strong><small>Recorded sales</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Products</span><span class="stat-icon green">▤</span></div><strong id="stat-products">0</strong><small>Products in catalog</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Low stock alerts</span><span class="stat-icon orange">!</span></div><strong id="stat-lowstock">0</strong><small>At or below reorder level</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Sales overview</h3><p>Monthly revenue · last 12 months</p></div><span class="tag">DESCRIPTIVE</span></div><div class="chart-wrap"><canvas id="sales-chart"></canvas><p class="empty-chart" id="sales-chart-empty">No sales data yet. Record transactions to see your chart.</p></div></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Best sellers</h3><p>Products by units sold</p></div></div><div id="top-products" class="simple-list"><p class="muted">No sales recorded yet.</p></div></article>
+        </div>
+        <article class="panel recommendation-panel"><div class="panel-heading"><div><h3>Business recommendations</h3><p>Suggested actions based on current inventory and sales.</p></div><span class="tag tag-green">PRESCRIPTIVE</span></div><div id="dashboard-recommendations" class="recommendation-list"><p class="muted">Recommendations will appear when data is available.</p></div></article>
+      </section>
+
+      <section class="view" id="view-products">
+        <div class="section-heading"><div><h2>Product catalog</h2><p>Create, view, update, and remove products.</p></div><button class="button button-primary" id="add-product-button">＋ Add product</button></div>
+        <article class="panel"><div class="table-toolbar"><input id="product-search" class="search-input" type="search" placeholder="Search products..."><span id="product-count" class="muted">0 products</span></div><div class="table-scroll"><table><thead><tr><th>PRODUCT</th><th>CATEGORY</th><th>UNIT PRICE</th><th>STOCK</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody id="products-table"><tr><td colspan="6" class="table-empty">No products yet. Add your first product.</td></tr></tbody></table></div></article>
+      </section>
+
+      <section class="view" id="view-sales">
+        <div class="section-heading"><div><h2>Sales transactions</h2><p>Record a sale and automatically deduct product stock.</p></div></div>
+        <div class="sales-layout">
+          <article class="panel form-panel"><div class="panel-heading"><div><h3>New transaction</h3><p>Select a product and quantity.</p></div></div><form id="sale-form"><label for="sale-product">Product</label><select id="sale-product" required><option value="">Select a product</option></select><label for="sale-quantity">Quantity</label><input id="sale-quantity" type="number" min="1" value="1" required><div class="sale-total"><span>Estimated total</span><strong id="sale-estimate">₱0.00</strong></div><button class="button button-primary button-full" type="submit">Save transaction</button><p class="form-hint">Stock is checked and updated when the sale is saved.</p></form></article>
+          <article class="panel"><div class="panel-heading"><div><h3>Recent transactions</h3><p>Latest 100 sales records</p></div></div><div class="table-scroll"><table><thead><tr><th>SALE ID</th><th>DATE</th><th>ITEMS</th><th>TOTAL</th><th>ACTION</th></tr></thead><tbody id="sales-table"><tr><td colspan="5" class="table-empty">No transactions recorded yet.</td></tr></tbody></table></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-inventory">
+        <div class="section-heading"><div><h2>Inventory health</h2><p>Monitor stock levels and identify products to reorder.</p></div><button class="button button-secondary" data-view="products">Manage products</button></div>
+        <div class="stats-grid compact-stats"><article class="stat-card"><span>Total units in stock</span><strong id="inventory-units">0</strong></article><article class="stat-card"><span>Products to reorder</span><strong id="inventory-alerts">0</strong></article></div>
+        <article class="panel"><div class="panel-heading"><div><h3>Stock status</h3><p>Products at or below their reorder level are highlighted.</p></div></div><div class="table-scroll"><table><thead><tr><th>PRODUCT</th><th>CATEGORY</th><th>AVAILABLE</th><th>REORDER LEVEL</th><th>STATUS</th></tr></thead><tbody id="inventory-table"><tr><td colspan="5" class="table-empty">No inventory records yet.</td></tr></tbody></table></div></article>
+      </section>
+
+      <section class="view" id="view-analytics">
+        <div class="section-heading"><div><h2>Business analytics</h2><p>Use historical data to understand, estimate, and improve business performance.</p></div></div>
+        <div class="analytics-grid">
+          <article class="panel analytics-card"><span class="tag">01 · DESCRIPTIVE</span><h3>What happened?</h3><p>Summarizes recorded sales, transaction counts, and best-selling products.</p><div id="descriptive-summary" class="insight-box">Waiting for sales data.</div></article>
+          <article class="panel analytics-card"><span class="tag tag-blue">02 · PREDICTIVE</span><h3>What may happen?</h3><p>Estimates next month's sales using a three-month moving average.</p><strong class="forecast-value" id="forecast-value">₱0.00</strong><small class="muted" id="forecast-note">A forecast will appear when monthly sales exist.</small></article>
+          <article class="panel analytics-card"><span class="tag tag-green">03 · PRESCRIPTIVE</span><h3>What should we do?</h3><p>Suggests inventory actions using stock levels and sales history.</p><div id="analytics-recommendations" class="recommendation-list"><p class="muted">No recommendations yet.</p></div></article>
+        </div>
+        <article class="panel chart-panel"><div class="panel-heading"><div><h3>Monthly sales trend</h3><p>Historical revenue from the database.</p></div></div><div class="chart-wrap"><canvas id="analytics-chart"></canvas><p class="empty-chart" id="analytics-chart-empty">No sales data available yet.</p></div></article>
+        <p class="disclaimer">Forecasts and recommendations are decision-support estimates based on the records entered. They are not guarantees and should be reviewed by the business owner.</p>
+      </section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <dialog id="product-dialog" class="modal">
+    <form id="product-form" method="dialog">
+      <div class="modal-heading"><div><p class="eyebrow">PRODUCT DETAILS</p><h2 id="product-dialog-title">Add product</h2></div><button type="button" class="close-button" id="close-product-dialog" aria-label="Close">×</button></div>
+      <input type="hidden" id="product-id">
+      <label for="product-name">Product name</label><input id="product-name" type="text" maxlength="150" required>
+      <label for="product-category">Category</label><select id="product-category" required></select>
+      <div class="form-row"><div><label for="product-price">Unit price (₱)</label><input id="product-price" type="number" min="0" step="0.01" required></div><div><label for="product-stock">Stock quantity</label><input id="product-stock" type="number" min="0" step="1" required></div></div>
+      <label for="product-reorder">Reorder level</label><input id="product-reorder" type="number" min="0" step="1" value="5" required>
+      <div class="modal-actions"><button type="button" class="button button-secondary" id="cancel-product">Cancel</button><button type="submit" class="button button-primary">Save product</button></div>
+    </form>
+  </dialog>
 </body>
 </html>
